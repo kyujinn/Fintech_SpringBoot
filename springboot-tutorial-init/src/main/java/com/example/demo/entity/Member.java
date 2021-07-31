@@ -19,6 +19,7 @@ import javax.persistence.Id;
 public class Member {
     @Id
     @GeneratedValue
+    Long seq;
     String id;
     String name;
     String org;
