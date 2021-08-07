@@ -5,9 +5,13 @@ import com.example.demo.repository.MemberRepository;
 import com.example.demo.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+//import org.springframework.security.core.annotation.AuthenticationPrincipal;
+//import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/user")
@@ -21,18 +25,22 @@ public class MemberController {
 //        return memberRepository.findById(key).orElse(null);
 //    }
 
+    final MemberService memberService;
+
+//    @GetMapping("/info")
+//    public Map<String, Object> getUserInfo(@AuthenticationPrincipal OAuth2User principal) {
+//        return Collections.singletonMap("name", principal.getAttribute("name"));
+//    }
+
     @PostMapping("/save")
     public void saveMember(@RequestBody Member member){
         memberService.addUser(member);
     }
 
-    final MemberService memberService;
-
     @GetMapping("/{key}")
-    public Member getMember( @PathVariable("key") Long key, @RequestParam(required = false)String name )
-    {
-        //return memberRepository.findById(key).orElse(null);
-        if(name != null){
+    public Member getMember(@PathVariable("key") Long key,
+                            @RequestParam(required = false) String name){
+        if( name != null){
             return memberService.findMember(key, name);
         } else {
             return memberService.findMember(key);
@@ -40,9 +48,7 @@ public class MemberController {
     }
 
     @GetMapping("/api/count")
-    //List<List<Map<String,Long>>>
-    public List<Object> countByOrgGroup(@RequestParam Boolean isActive){
+    public List<Object> countByOrgGroup(@RequestParam Boolean isActive) {
         return memberService.countOrgGroup(isActive);
-
     }
 }
